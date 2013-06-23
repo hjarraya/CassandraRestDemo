@@ -7,7 +7,18 @@
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
 	">
 	
-	<bean id='userService' class="net.hjarraya.cassandrarestdemo.service.UserServiceImpl" />
+	
+	<bean id='cluster' class='net.hjarraya.cassandrarestdemo.application.ClusterWrapper'>
+		<constructor-arg index="0" value="127.0.0.1" />
+	</bean>
+	
+	<bean id='userDAO' class='net.hjarraya.cassandrarestdemo.data.UserServiceDAOImpl' >
+			<constructor-arg index="0" ref="cluster" />
+	</bean>
+	
+	<bean id='userService' class="net.hjarraya.cassandrarestdemo.service.UserServiceImpl" >
+			<constructor-arg index="0" ref="userDAO" />
+	</bean>
 	<bean id='jacksonProvider' class='org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider' />
 
 	<jaxrs:server address="http://localhost:9001">

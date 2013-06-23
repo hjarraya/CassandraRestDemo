@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.hjarraya.cassandrarestdemo.application.ClusterWrapper;
 import net.hjarraya.cassandrarestdemo.model.User;
 import net.hjarraya.cassandrarestdemo.util.Utils;
 
@@ -24,7 +25,7 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	private static final String DELET_USER = "DELETE FROM users.users WHERE id=?;";
 	private static final String SELECT_USER_BY_FN = "SELECT * FROM users.users WHERE firstName=?;";
 	private static final String SELECT_USER_BY_LN = "SELECT * FROM users.users WHERE lastName=?;";
-	private static final String SELECT_USER_BY_FN_LN = "SELECT * FROM users WHERE firstName=? AND lastName=?;";
+	private static final String SELECT_USER_BY_FN_LN = "SELECT * FROM users.users WHERE firstName=? AND lastName=? ALLOW FILTERING;";
 	private static final String SELECT_USERS_BY_EMAIL = "SELECT * FROM users.emaildomain WHERE domain=?;";
 	private static final String ADD_EMAIL_DOMAIN = "UPDATE users.emaildomain SET  ids = ids + ? where domain =? and firstName = ?";
 	private static final String REMOVE_EMAIL_DOMAIN = "UPDATE users.emaildomain SET  ids = ids - ? where domain =? and firstName = ?";
@@ -45,8 +46,8 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	private final PreparedStatement addUserEmailStmt;
 	private final PreparedStatement addUserPhoneNumberStmt;
 
-	public UserServiceDAOImpl(Cluster cluster) {
-		this.cluster = cluster;
+	public UserServiceDAOImpl(ClusterWrapper clusterWrapper) {
+		this.cluster = clusterWrapper.getCluster();
 		this.session = cluster.connect();
 		this.addUpdateUserStmt = session.prepare(INSERT_USER);
 		this.addEmailDomainStmt = session.prepare(ADD_EMAIL_DOMAIN);
