@@ -33,19 +33,19 @@ public interface UserService {
 	public boolean removeUser(User user);
 
 	@GET
-	@Path("/users/firstname")
+	@Path("/users/firstname/{firstname}")
 	@Produces({ "application/json", "text/xml" })
-	public Collection<User> getUsersByFirstName(String firstName);
+	public Collection<User> getUsersByFirstName(@PathParam("firstname") String firstName);
 
 	@GET
-	@Path("/users/lasttname")
+	@Path("/users/lastname/{lastname}")
 	@Produces({ "application/json", "text/xml" })
-	public Collection<User> getUsersByLastName(String lastName);
+	public Collection<User> getUsersByLastName(@PathParam("lastname") String lastName);
 
 	@GET
-	@Path("/users/emaildomain")
+	@Path("/users/emaildomain/{emaildomain}")
 	@Produces({ "application/json", "text/xml" })
-	public Collection<User> getUsersByEmailDomain(String emaildomain);
+	public Collection<User> getUsersByEmailDomain(@PathParam("emaildomain") String emaildomain);
 
 	@GET
 	@Path("/users/update/{email}")

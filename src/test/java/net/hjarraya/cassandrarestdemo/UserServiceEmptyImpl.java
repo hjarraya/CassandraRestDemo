@@ -35,6 +35,7 @@ public class UserServiceEmptyImpl implements UserService {
 
 	@Override
 	public Collection<User> getUsersByFirstName(String firstName) {
+		System.out.println("Current users map size " + users.values().size());
 		return users.values();
 	}
 
