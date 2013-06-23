@@ -30,6 +30,7 @@ public class TestUtils {
 			}
 			if (i % 10 == 0)
 				j++;
+			users.add(user);
 		}
 		return users;
 	}
