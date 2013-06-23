@@ -55,5 +55,5 @@ public interface UserService {
 	@GET
 	@Path("/users/update/{phone}")
 	@Produces({ "application/json", "text/xml" })
-	public boolean addPhoneNumer(User user, @PathParam("phone") String phontNumber);
+	public boolean addPhoneNumber(User user, @PathParam("phone") String phontNumber);
 }

@@ -56,7 +56,7 @@ public class UserServiceEmptyImpl implements UserService {
 	}
 
 	@Override
-	public boolean addPhoneNumer(User user, String phontNumber) {
+	public boolean addPhoneNumber(User user, String phontNumber) {
 		user.addPhone(phontNumber);
 		users.put(user.getId(), user);
 		return true;

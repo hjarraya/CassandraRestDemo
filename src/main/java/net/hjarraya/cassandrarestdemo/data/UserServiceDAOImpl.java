@@ -227,7 +227,7 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	}
 
 	@Override
-	public void addPhoneNumer(User user, String phoneNumber) {
+	public void addPhoneNumber(User user, String phoneNumber) {
 		logger.info("Adding user phone number " + user + " - " + phoneNumber);
 		Set<String> phoneWrapper = new HashSet<String>(1);
 		phoneWrapper.add(phoneNumber);

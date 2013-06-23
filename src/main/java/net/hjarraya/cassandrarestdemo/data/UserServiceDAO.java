@@ -21,5 +21,5 @@ public interface UserServiceDAO {
 
 	public void addEmail(User user, String email);
 
-	public void addPhoneNumer(User user, String phoneNumber);
+	public void addPhoneNumber(User user, String phoneNumber);
 }
