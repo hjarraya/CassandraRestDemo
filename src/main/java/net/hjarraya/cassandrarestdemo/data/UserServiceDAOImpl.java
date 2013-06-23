@@ -21,7 +21,7 @@ import com.datastax.driver.core.Session;
 public class UserServiceDAOImpl implements UserServiceDAO {
 	private static final Logger logger = Logger.getLogger(UserServiceDAOImpl.class);
 	private static final String INSERT_USER = "UPDATE users.users SET firstName=? , lastName = ? , emails = ?, phoneNumbers = ? WHERE id =?;";
-	private static final String SELECT_USER = "SELECT * FROM users.users WHERE id=?;";
+	private static final String SELECT_USER = "SELECT id,firstname, lastname, emails, phoneNumbers  FROM users.users WHERE id=?;";
 	private static final String DELET_USER = "DELETE FROM users.users WHERE id=?;";
 	private static final String SELECT_USER_BY_FN = "SELECT * FROM users.users WHERE firstName=?;";
 	private static final String SELECT_USER_BY_LN = "SELECT * FROM users.users WHERE lastName=?;";
@@ -89,16 +89,16 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	public User getUser(String id) {
 		logger.info("Get user " + id);
 		User user = new User();
-		user.setId(id);
-		BoundStatement bs = getUserStmt.bind(user.getId());
+		BoundStatement bs = getUserStmt.bind(id);
 		ResultSet rest = session.execute(bs);
 		List<Row> rows = rest.all();
 		if (!rows.isEmpty()) {
 			Row row = rows.get(0);
-			user.setFirstName(row.getString("firstName"));
-			user.setLastName(row.getString("lastName"));
+			user.setId(row.getString("id"));
+			user.setFirstName(row.getString("firstname"));
+			user.setLastName(row.getString("lastname"));
 			user.setEmails(row.getSet("emails", String.class));
-			user.setPhones(row.getSet("phones", String.class));
+			user.setPhones(row.getSet("phoneNumbers", String.class));
 		}
 		logger.info("User retreive it " + user);
 		return user;
@@ -135,10 +135,10 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 		for (Row row : rows) {
 			User user = new User();
 			user.setId(row.getString("id"));
-			user.setFirstName(row.getString("firstName"));
-			user.setLastName(row.getString("lastName"));
+			user.setFirstName(row.getString("firstname"));
+			user.setLastName(row.getString("lastname"));
 			user.setEmails(row.getSet("emails", String.class));
-			user.setPhones(row.getSet("phones", String.class));
+			user.setPhones(row.getSet("phoneNumbers", String.class));
 			users.add(user);
 		}
 		return users;
@@ -157,7 +157,7 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 			user.setFirstName(row.getString("firstName"));
 			user.setLastName(row.getString("lastName"));
 			user.setEmails(row.getSet("emails", String.class));
-			user.setPhones(row.getSet("phones", String.class));
+			user.setPhones(row.getSet("phoneNumbers", String.class));
 			users.add(user);
 		}
 		return users;
@@ -176,7 +176,7 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 			user.setFirstName(row.getString("firstName"));
 			user.setLastName(row.getString("lastName"));
 			user.setEmails(row.getSet("emails", String.class));
-			user.setPhones(row.getSet("phones", String.class));
+			user.setPhones(row.getSet("phoneNumbers", String.class));
 			users.add(user);
 		}
 		return users;
@@ -203,7 +203,7 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 					user.setFirstName(row.getString("firstName"));
 					user.setLastName(row.getString("lastName"));
 					user.setEmails(row.getSet("emails", String.class));
-					user.setPhones(row.getSet("phones", String.class));
+					user.setPhones(row.getSet("phoneNumbers", String.class));
 					users.add(user);
 				}
 			}
