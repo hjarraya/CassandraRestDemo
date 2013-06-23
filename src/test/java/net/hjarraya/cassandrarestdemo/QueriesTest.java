@@ -1,5 +1,6 @@
 package net.hjarraya.cassandrarestdemo;
 
+import static net.hjarraya.cassandrarestdemo.TestUtils.createUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -148,16 +149,6 @@ public class QueriesTest {
 					return;
 		}
 		fail("Node ids added to email domain");
-	}
-
-	public User createUser() {
-		User user = new User();
-		user.setId("1");
-		user.setFirstName("john");
-		user.setLastName("Doe");
-		user.addEmail("john.doe@gmail.com");
-		user.addPhone("777-777-777");
-		return user;
 	}
 
 	public User getUser(String id) {
