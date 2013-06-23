@@ -141,7 +141,7 @@ public class QueriesTest {
 		PreparedStatement selectSt = session.prepare(SELECT_USERS_BY_EMAIL);
 		ResultSet rst = session.execute(selectSt.bind(emailDomain));
 		List<Row> rows = rst.all();
-		assertTrue(rows.size() == 1);
+		assertTrue(rows.size() != 0);
 		for (Row row : rows) {
 			Set<String> retrievedIds = row.getSet("ids", String.class);
 			for (String id : retrievedIds)
@@ -189,7 +189,7 @@ public class QueriesTest {
 		PreparedStatement ps = session.prepare(SELECT_USER_BY_FN);
 		ResultSet rest = session.execute(ps.bind(user.getFirstName()));
 		List<Row> rows = rest.all();
-		assertTrue(rows.size() == 1);
+		assertTrue(rows.size() != 0);
 		assertTrue(rows.get(0).getString("firstName").equals(user.getFirstName()));
 	}
 
