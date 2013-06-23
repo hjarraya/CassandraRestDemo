@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.hjarraya.cassandrarestdemo.model.User;
+import net.hjarraya.cassandrarestdemo.util.Utils;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.wink.client.Resource;
@@ -104,6 +105,18 @@ public class UserServiceTest {
 		assertTrue(actual.getId() == null);
 	}
 
+	public User getUser(String id) {
+		try {
+			RestClient client = new RestClient();
+			Resource resources = client.resource("http://localhost:9001/users/" + id);
+			String response = resources.accept("application/json").get(String.class);
+			User actual = objectMapper.readValue(response, User.class);
+			return actual;
+		} catch (Exception ex) {
+			return new User();
+		}
+	}
+
 	@Test
 	public void getUsersByFirstName() throws JsonGenerationException, JsonMappingException, IOException {
 		addMultipleUserTest();
@@ -120,40 +133,68 @@ public class UserServiceTest {
 		assertTrue(actual.size() != 0);
 	}
 
-	public User getUser(String id) {
-		try {
-			RestClient client = new RestClient();
-			Resource resources = client.resource("http://localhost:9001/users/" + id);
-			String response = resources.accept("application/json").get(String.class);
-			User actual = objectMapper.readValue(response, User.class);
-			return actual;
-		} catch (Exception ex) {
-			return new User();
-		}
+	@Test
+	public void getUsersByLastName() throws JsonGenerationException, JsonMappingException, IOException {
+		addMultipleUserTest();
+		User user = TestUtils.createUser();
+		System.out.println(objectMapper.writeValueAsString(user.getLastName()));
+		RestClient client = new RestClient();
+		Resource resources = client.resource("http://localhost:9001/users/lastname/" + user.getLastName());
+		String response = resources.contentType("application/json").accept("application/json")
+				.get(String.class);
+		System.out.println(response);
+		List<User> actual = objectMapper.readValue(response, new TypeReference<List<User>>() {
+		});
+		System.out.println("retreive it object " + actual.size());
+		assertTrue(actual.size() != 0);
 	}
 
-	/* 
+	@Test
+	public void getEmailDomain() throws JsonGenerationException, JsonMappingException, IOException {
+		addMultipleUserTest();
+		User user = TestUtils.createUser();
+		String emailDomain = Utils.getDomainFromEmail(user.getEmails().iterator().next());
+		RestClient client = new RestClient();
+		Resource resources = client.resource("http://localhost:9001/users/emaildomain/" + emailDomain);
+		String response = resources.contentType("application/json").accept("application/json")
+				.get(String.class);
+		System.out.println(response);
+		List<User> actual = objectMapper.readValue(response, new TypeReference<List<User>>() {
+		});
+		System.out.println("retreive it object " + actual.size());
+		assertTrue(actual.size() != 0);
+	}
 
-	@GET
-	@Path("/users/lastname/{lastname}")
-	@Produces({ "application/json", "text/xml" })
-	public Collection<User> getUsersByLastName(@PathParam("lastname") String lastName);
+	@Test
+	public void addEmailTest() throws JsonGenerationException, JsonMappingException, IOException {
+		addUserTest();
+		User user = TestUtils.createUser();
+		RestClient client = new RestClient();
+		String emailToAdd = "john.doe@hotmail.com";
+		user.addEmail(emailToAdd);
+		Resource resources = client.resource("http://localhost:9001/users/email/" + emailToAdd);
+		String response = resources.contentType("application/json").accept("application/json")
+				.post(String.class, objectMapper.writeValueAsString(user));
+		assertTrue("true".equals(response));
+		User actual = getUser(user.getId());
+		assertEquals(user.getEmails(), actual.getEmails());
+	}
 
-	@GET
-	@Path("/users/emaildomain/{emaildomain}")
-	@Produces({ "application/json", "text/xml" })
-	public Collection<User> getUsersByEmailDomain(@PathParam("emaildomain") String emaildomain);
+	@Test
+	public void addPhoneNumberTest() throws JsonGenerationException, JsonMappingException, IOException {
+		addUserTest();
+		User user = TestUtils.createUser();
+		RestClient client = new RestClient();
+		String phoneToAdd = "555-555-555";
+		user.addPhone(phoneToAdd);
+		Resource resources = client.resource("http://localhost:9001/users/phone/" + phoneToAdd);
+		String response = resources.contentType("application/json").accept("application/json")
+				.post(String.class, objectMapper.writeValueAsString(user));
+		assertTrue("true".equals(response));
+		User actual = getUser(user.getId());
+		assertEquals(user.getPhones(), actual.getPhones());
+	}
 
-	@GET
-	@Path("/users/update/{email}")
-	@Produces({ "application/json", "text/xml" })
-	public boolean addEmail(User user, @PathParam("email") String email);
-
-	@GET
-	@Path("/users/update/{phone}")
-	@Produces({ "application/json", "text/xml" })
-	public boolean addPhoneNumber(User user, @PathParam("phone") String phontNumber);
-	*/
 	@AfterClass
 	public static void teadDown() {
 		ctx.stop();

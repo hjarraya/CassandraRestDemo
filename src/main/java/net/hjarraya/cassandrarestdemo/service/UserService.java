@@ -47,13 +47,13 @@ public interface UserService {
 	@Produces({ "application/json", "text/xml" })
 	public Collection<User> getUsersByEmailDomain(@PathParam("emaildomain") String emaildomain);
 
-	@GET
-	@Path("/users/update/{email}")
-	@Produces({ "application/json", "text/xml" })
+	@POST
+	@Path("/users/email/{email}")
+	@Consumes({ "application/json", "text/xml" })
 	public boolean addEmail(User user, @PathParam("email") String email);
 
-	@GET
-	@Path("/users/update/{phone}")
-	@Produces({ "application/json", "text/xml" })
+	@POST
+	@Path("/users/phone/{phone}")
+	@Consumes({ "application/json", "text/xml" })
 	public boolean addPhoneNumber(User user, @PathParam("phone") String phontNumber);
 }
