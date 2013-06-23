@@ -20,6 +20,11 @@ import com.datastax.driver.core.Session;
 
 public class UserServiceDAOImpl implements UserServiceDAO {
 	private static final Logger logger = Logger.getLogger(UserServiceDAOImpl.class);
+	private static final String CREATE_KEYSPACE = "CREATE KEYSPACE users  WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor': 1};";
+	private static final String CREATE_USERS_CF = "CREATE TABLE users.users (  id text,  firstName text,  lastName text,  emails set<text>,  phoneNumbers set<text>, PRIMARY KEY (id));";
+	private static final String CREATE_EMAILS_CF = "CREATE TABLE users.emaildomain ( domain text, firstName text, ids set<text>, PRIMARY KEY (domain,firstName) );";
+	private static final String CREATE_FN_INDEX = "CREATE INDEX usersFirstName ON users.users(firstName);";
+	private static final String CREATE_LN_INDEX = " CREATE INDEX usersLastName ON users.users(lastName);";
 	private static final String INSERT_USER = "UPDATE users.users SET firstName=? , lastName = ? , emails = ?, phoneNumbers = ? WHERE id =?;";
 	private static final String SELECT_USER = "SELECT id,firstname, lastname, emails, phoneNumbers  FROM users.users WHERE id=?;";
 	private static final String DELET_USER = "DELETE FROM users.users WHERE id=?;";
@@ -49,6 +54,16 @@ public class UserServiceDAOImpl implements UserServiceDAO {
 	public UserServiceDAOImpl(ClusterWrapper clusterWrapper) {
 		this.cluster = clusterWrapper.getCluster();
 		this.session = cluster.connect();
+		ResultSet rest = session
+				.execute("select * from system.schema_keyspaces where keyspace_name='users';");
+		if (rest.all().isEmpty()) {
+			// create keyspace and column families if not exist;
+			session.execute(CREATE_KEYSPACE);
+			session.execute(CREATE_USERS_CF);
+			session.execute(CREATE_EMAILS_CF);
+			session.execute(CREATE_FN_INDEX);
+			session.execute(CREATE_LN_INDEX);
+		}
 		this.addUpdateUserStmt = session.prepare(INSERT_USER);
 		this.addEmailDomainStmt = session.prepare(ADD_EMAIL_DOMAIN);
 		this.removeEmailDomainStmt = session.prepare(REMOVE_EMAIL_DOMAIN);
