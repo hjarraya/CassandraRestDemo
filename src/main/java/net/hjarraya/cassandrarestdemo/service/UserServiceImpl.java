@@ -6,11 +6,6 @@ import net.hjarraya.cassandrarestdemo.model.User;
 
 public class UserServiceImpl implements UserService {
 	@Override
-	public String returnHelloMessage() {
-		return "{\"HelloWorld\":\"Hi\"}";
-	}
-
-	@Override
 	public boolean addUser(User user) {
 		System.out.println("Adding user " + user);
 		return false;

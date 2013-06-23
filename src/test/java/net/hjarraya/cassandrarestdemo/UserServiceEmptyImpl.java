@@ -11,12 +11,6 @@ public class UserServiceEmptyImpl implements UserService {
 	private Map<String, User> users = new HashMap<String, User>();
 
 	@Override
-	public String returnHelloMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean addUser(User user) {
 		users.put(user.getId(), user);
 		return true;

@@ -12,13 +12,8 @@ import javax.ws.rs.Produces;
 import net.hjarraya.cassandrarestdemo.model.User;
 
 public interface UserService {
-	@GET
-	@Path("/test")
-	@Produces({ "application/json", "text/xml" })
-	public String returnHelloMessage();
-
 	@POST
-	@Path("/users")
+	@Path("/users/add")
 	@Consumes({ "application/json", "text/xml" })
 	public boolean addUser(User user);
 
@@ -27,17 +22,38 @@ public interface UserService {
 	@Produces({ "application/json", "text/xml" })
 	public User getUser(@PathParam("id") String id);
 
+	@POST
+	@Path("/users/update")
+	@Consumes({ "application/json", "text/xml" })
 	public boolean updateUser(User user);
 
+	@POST
+	@Path("/users/remove")
+	@Consumes({ "application/json", "text/xml" })
 	public boolean removeUser(User user);
 
+	@GET
+	@Path("/users/firstname")
+	@Produces({ "application/json", "text/xml" })
 	public Collection<User> getUsersByFirstName(String firstName);
 
+	@GET
+	@Path("/users/lasttname")
+	@Produces({ "application/json", "text/xml" })
 	public Collection<User> getUsersByLastName(String lastName);
 
+	@GET
+	@Path("/users/emaildomain")
+	@Produces({ "application/json", "text/xml" })
 	public Collection<User> getUsersByEmailDomain(String emaildomain);
 
-	public boolean addEmail(User user, String email);
+	@GET
+	@Path("/users/update/{email}")
+	@Produces({ "application/json", "text/xml" })
+	public boolean addEmail(User user, @PathParam("email") String email);
 
-	public boolean addPhoneNumer(User user, String phontNumber);
+	@GET
+	@Path("/users/update/{phone}")
+	@Produces({ "application/json", "text/xml" })
+	public boolean addPhoneNumer(User user, @PathParam("phone") String phontNumber);
 }
