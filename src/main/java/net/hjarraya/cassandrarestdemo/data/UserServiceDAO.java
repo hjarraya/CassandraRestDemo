@@ -5,21 +5,21 @@ import java.util.List;
 import net.hjarraya.cassandrarestdemo.model.User;
 
 public interface UserServiceDAO {
-	public boolean addUser(User user);
-
 	public User getUser(String id);
 
-	public boolean updateUser(User user);
+	public void updateUser(User user);
 
-	public boolean removeUser(User uesr);
+	public void removeUser(User user);
 
 	public List<User> getUsersByFirstName(String firstName);
 
 	public List<User> getUsersByLastName(String lastName);
 
-	public List<User> getUsersByEmail(String email);
+	public List<User> getUsersByFirstAndLastName(String firstName, String lastName);
 
-	public boolean addEmail(String id, String email);
+	public List<User> getUsersByEmail(String emailDomain);
 
-	public boolean addPhoneNumer(String id, String phontNumber);
+	public void addEmail(User user, String email);
+
+	public void addPhoneNumer(User user, String phoneNumber);
 }
